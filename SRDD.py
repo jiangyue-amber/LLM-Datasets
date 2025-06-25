@@ -9,7 +9,7 @@ api_key = os.getenv("API_KEY")
 
 genai.configure(api_key=api_key)
 model = genai.GenerativeModel("models/gemini-2.0-flash")
-
+#
 
 input_path = "/Users/amberjiang/Desktop/cs research/SRDD data/data_attribute_format.csv"
 df = pd.read_csv(input_path)

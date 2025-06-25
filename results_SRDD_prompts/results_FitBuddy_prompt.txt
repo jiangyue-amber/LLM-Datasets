@@ -1,0 +1,16 @@
+Software Name: FitBuddy
+Category: Health_Fitness
+Description:
+FitBuddy is a software application that provides personalized workout recommendations and tracking for users based on their fitness goals and preferences. The app includes a library of exercises with detailed instructions and demonstration videos. Users can input their goals, such as weight loss, muscle gain, or endurance improvement, as well as their current fitness level and available equipment. FitBuddy will then generate a customized workout plan that includes exercises targeting different muscle groups and intensity levels. The app also tracks and analyzes users
+
+Gemini's Evaluation:
+Here's the evaluation of FitBuddy against the provided design rules:
+
+1.  ✅ The primary function is to generate personalized workout plans based on user input and track progress. This is a relatively simple, common, and feasible application.
+2.  ✅ The description provides essential information: personalized workout recommendations, exercise library, goal setting, fitness level input, equipment availability, custom plan generation, and progress tracking. This covers the fundamental functionality.
+3.  ❌ The description doesn't explicitly state that the software doesn't require internet access. Exercise videos might imply a need for online access.
+4.  ✅ The software can function without real-world data sources. The exercise library and algorithm for generating workout plans can be pre-built, and user input is the primary data source.
+5.  ✅ The software is designed for a single user to operate, making it user-friendly and easy to test without needing multiple participants.
+
+CountObey: 4
+====================================================================================================

@@ -1,0 +1,20 @@
+Software Name: Office_Chat
+Category: Office
+Description:
+Office Chat is a software application that provides a real-time communication platform for employees within an office. It allows users to send messages, share files, and collaborate on projects. The software includes features such as individual and group chats, file sharing, message search, and notification settings.
+
+Gemini's Evaluation:
+Here's an evaluation of Office_Chat against the provided design rules:
+
+1.  ✅ The primary function is real-time communication within an office, encompassing message sending, file sharing, and collaboration. This is a simple, common, and feasible function for a software application.
+
+2.  ✅ The description effectively covers the essential information: real-time communication, employees within an office, messaging, file sharing, collaboration, and specific features like group chats, file sharing, search, and notifications. This description accurately reflects the core functionality.
+
+3.  ❌ The description does *not* explicitly state that the software doesn't require internet access. While an "office chat" *could* be designed to be self-contained, this isn't guaranteed by the current description. The description lacks this critical piece of information.
+
+4.  ✅ The described software can be realized without real-world data sources. It primarily involves internal communication and file sharing. No external feeds or live data are necessary for its core functionality.
+
+5.  ✅ While designed for an office, a single user *can* still test the basic functionality such as sending messages to themselves, sharing files, and exploring settings. The software's core features do not *require* multiple users to function.
+
+CountObey: 4
+====================================================================================================

@@ -1,35 +1,46 @@
 from datasets import load_dataset
 import google.generativeai as genai
+from dotenv import load_dotenv
+import os
+import requests
+import json
 
-genai.configure(api_key="AIzaSyBKVgbAcfyJeP1SHttkM4LpksIWDLlhnSQ")
+load_dotenv()
+api_key = os.getenv("GEMINI_KEY")
+
+
+genai.configure(api_key=api_key)
 model = genai.GenerativeModel("models/gemini-2.0-flash")
 
-def run_inference(example):
-    problem_statement = example['problem_statement']
-    base_commit = example['base_commit']
+def get_commit_info(repo,base_commit):
+    key = os.getenv("GITHUB_KEY")
+    headers = {
+        "Authorization": f"token {key}",
+    }
+    url = f"https://api.github.com/repos/{repo}/commits/{base_commit}"
+    response = requests.get(url, headers = headers)
+    return response.json()
 
-    print("Problem statement:\n", problem_statement)
-    print("Base commit:\n", base_commit)
+def create_prompt(problem_statement):
+    pass
 
-    prompt = f"""GitHub issue:
-    {problem_statement}
-    Base commit:
-    {base_commit}
-    Write a code patch that fixes this issue:"""
+def ask_gemini():
+    pass
 
-    print("Running Gemini inference...")
-    response = model.generate_content(prompt)
-    generated_patch = response.text
+def testing(test_patch):
+    pass
 
-    print("Generated patch:\n", generated_patch)
+ds = load_dataset("SWE-bench/SWE-bench_Lite")
+test_split = ds['test']
+sampled = test_split.shuffle().select(range(3))
 
-def main():
-    ds = load_dataset("SWE-bench/SWE-bench_Lite")
+output_dir = "results_SWE_bench"
+os.makedirs(output_dir, exist_ok=True)
 
-    for i in range(13):
-        example = ds['dev'][i] # Or ds['test'][0]
-        run_inference(example)
-        print("\n" + "=" * 100 + "\n")
+for instance in sampled:
+    repo = instance["repo"]
+    base_commit = instance["base_commit"]
+    problem_statement = instance["problem_statement"]
+    test_patch = instance["test_patch"]
 
-if __name__ == "__main__":
-    main()
+    get_commit_info(repo,base_commit)

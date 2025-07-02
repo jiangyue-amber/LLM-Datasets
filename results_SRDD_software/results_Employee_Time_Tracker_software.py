@@ -2,7 +2,7 @@
 # Category: Business
 # Description: Employee Time Tracker is a software application that allows businesses to track and manage employee working hours and attendance. It provides features for employees to log their working hours, record time off, and request leave. The application also offers functionalities for managers to approve and manage time off requests, monitor attendance and punctuality, and generate time and attendance reports.
 
-```python
+
 import datetime
 
 class Employee:
@@ -167,4 +167,3 @@ if __name__ == "__main__":
     employee2.request_time_off(datetime.date(2024, 3, 1), datetime.date(2024, 3, 5), "Vacation")
     manager1.reject_time_off(employee2, 0)
     print(employee2.get_time_off_requests())
-```

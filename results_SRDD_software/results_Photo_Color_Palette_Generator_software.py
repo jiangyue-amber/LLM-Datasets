@@ -2,7 +2,7 @@
 # Category: Photo
 # Description: A software application that generates color palettes based on the colors found in a photo. Users can select an image, and the software will analyze the colors present, extracting the dominant hues and generating a complementary color palette. The color palettes can be used for various purposes such as designing websites, creating artwork, or selecting color schemes for projects.
 
-```python
+
 from PIL import Image
 from collections import Counter
 import colorgram
@@ -44,4 +44,3 @@ if __name__ == '__main__':
         print("Color Palette:")
         for color in palette:
             print(f"RGB: {color}")
-```

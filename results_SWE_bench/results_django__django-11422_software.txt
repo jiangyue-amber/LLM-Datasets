@@ -1,0 +1,59 @@
+Repo: django/django
+Repo ID: django__django-11422
+Problem Statement: Autoreloader with StatReloader doesn't track changes in manage.py.
+Description
+	 
+		(last modified by Mariusz Felisiak)
+	 
+This is a bit convoluted, but here we go.
+Environment (OSX 10.11):
+$ python -V
+Python 3.6.2
+$ pip -V
+pip 19.1.1
+$ pip install Django==2.2.1
+Steps to reproduce:
+Run a server python manage.py runserver
+Edit the manage.py file, e.g. add print(): 
+def main():
+	print('sth')
+	os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ticket_30479.settings')
+	...
+Under 2.1.8 (and prior), this will trigger the auto-reloading mechanism. Under 2.2.1, it won't. As far as I can tell from the django.utils.autoreload log lines, it never sees the manage.py itself.
+
+
+GenAI's Patch:
+```patch
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@ -277,6 +277,7 @@
+         if self.main_module:
+             files.add(self.main_module.__file__)
+         files.add(sys.modules['__main__'].__file__)
++        files.add(os.path.abspath(sys.argv[0]))
+         return files
+ 
+     def _get_reloader(self):
+```
+
+Golden Patch: diff --git a/django/utils/autoreload.py b/django/utils/autoreload.py
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@ -114,7 +114,15 @@ def iter_modules_and_files(modules, extra_files):
+         # During debugging (with PyDev) the 'typing.io' and 'typing.re' objects
+         # are added to sys.modules, however they are types not modules and so
+         # cause issues here.
+-        if not isinstance(module, ModuleType) or getattr(module, '__spec__', None) is None:
++        if not isinstance(module, ModuleType):
++            continue
++        if module.__name__ == '__main__':
++            # __main__ (usually manage.py) doesn't always have a __spec__ set.
++            # Handle this by falling back to using __file__, resolved below.
++            # See https://docs.python.org/reference/import.html#main-spec
++            sys_file_paths.append(module.__file__)
++            continue
++        if getattr(module, '__spec__', None) is None:
+             continue
+         spec = module.__spec__
+         # Modules could be loaded from places without a concrete location. If
+

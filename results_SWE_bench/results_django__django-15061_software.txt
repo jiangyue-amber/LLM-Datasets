@@ -1,0 +1,43 @@
+Repo: django/django
+Repo ID: django__django-15061
+Problem Statement: Remove "for = ..." from MultiWidget's <label>.
+Description
+	
+The instance from Raw MultiWidget class generate id_for_label like f'{id_}0'
+It has not sense.
+For example ChoiceWidget has self.add_id_index and I can decide it myself, how I will see label_id - with or without index.
+I think, it is better to remove completely id_for_label method from MultiWidget Class.
+
+
+GenAI's Patch:
+```diff
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -351,9 +351,6 @@
+     def get_context(self, name, value, attrs):
+         context = super().get_context(name, value, attrs)
+         context['widget']['subwidgets'] = self.get_context_data(name, value, attrs)
+-        if 'id' in context['widget']:
+-            context['widget']['id_for_label'] = context['widget']['id'] + '0'
+-
+         return context
+ 
+     def get_context_data(self, name, value, attrs):
+
+```
+
+Golden Patch: diff --git a/django/forms/widgets.py b/django/forms/widgets.py
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -849,9 +849,7 @@ def get_context(self, name, value, attrs):
+         return context
+ 
+     def id_for_label(self, id_):
+-        if id_:
+-            id_ += '_0'
+-        return id_
++        return ''
+ 
+     def value_from_datadict(self, data, files, name):
+         return [
+

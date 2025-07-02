@@ -2,7 +2,7 @@
 # Category: Music
 # Description: The Music Loop Creator is a software application that allows users to easily create and arrange loops of musical patterns. Users can select different instrument sounds and create their own sequences of notes or chords. The software provides a user-friendly interface with a grid-based layout where users can place and rearrange musical patterns to create unique loops. It also offers features like tempo adjustment, loop length customization, and the ability to export the loops to various audio file formats. The Music Loop Creator aims to empower musicians, producers, and DJs with a versatile tool for loop creation and music production.
 
-```python
+
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import random
@@ -352,4 +352,3 @@ class MusicLoopCreator:
 root = tk.Tk()
 my_gui = MusicLoopCreator(root)
 root.mainloop()
-```

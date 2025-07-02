@@ -1,0 +1,188 @@
+Repo: pytest-dev/pytest
+Repo ID: pytest-dev__pytest-5103
+Problem Statement: Unroll the iterable for all/any calls to get better reports
+Sometime I need to assert some predicate on all of an iterable, and for that the builtin functions `all`/`any` are great - but the failure messages aren't useful at all!
+For example - the same test written in three ways:
+
+- A generator expression
+```sh                                                                                                                                                                                                                         
+    def test_all_even():
+        even_stevens = list(range(1,100,2))
+>       assert all(is_even(number) for number in even_stevens)
+E       assert False
+E        +  where False = all(<generator object test_all_even.<locals>.<genexpr> at 0x101f82ed0>)
+```
+- A list comprehension
+```sh
+    def test_all_even():
+        even_stevens = list(range(1,100,2))
+>       assert all([is_even(number) for number in even_stevens])
+E       assert False
+E        +  where False = all([False, False, False, False, False, False, ...])
+```
+- A for loop
+```sh
+    def test_all_even():
+        even_stevens = list(range(1,100,2))
+        for number in even_stevens:
+>           assert is_even(number)
+E           assert False
+E            +  where False = is_even(1)
+
+test_all_any.py:7: AssertionError
+```
+The only one that gives a meaningful report is the for loop - but it's way more wordy, and `all` asserts don't translate to a for loop nicely (I'll have to write a `break` or a helper function - yuck)
+I propose the assertion re-writer "unrolls" the iterator to the third form, and then uses the already existing reports.
+
+- [x] Include a detailed description of the bug or suggestion
+- [x] `pip list` of the virtual environment you are using
+```
+Package        Version
+-------------- -------
+atomicwrites   1.3.0  
+attrs          19.1.0 
+more-itertools 7.0.0  
+pip            19.0.3 
+pluggy         0.9.0  
+py             1.8.0  
+pytest         4.4.0  
+setuptools     40.8.0 
+six            1.12.0 
+```
+- [x] pytest and operating system versions
+`platform darwin -- Python 3.7.3, pytest-4.4.0, py-1.8.0, pluggy-0.9.0`
+- [x] Minimal example if possible
+
+
+
+GenAI's Patch:
+```diff
+--- a/src/_pytest/assertion/rewrite.py
++++ b/src/_pytest/assertion/rewrite.py
+@@ -724,6 +724,36 @@
+     def visit_Call(self, call: ast.Call) -> None:
+         """Unroll all/any calls."""
+         if (
++            isinstance(call.func, ast.Name)
++            and call.args
++            and len(call.args) == 1
++            and isinstance(call.args[0], (ast.GeneratorExp, ast.ListComp, ast.SetComp, ast.DictComp))
++            and call.func.id in ("all", "any")
++        ):
++            iterable = call.args[0]
++            if isinstance(iterable, (ast.ListComp, ast.SetComp, ast.DictComp)):
++                # Convert list/set/dict comprehension to generator expression
++                target = ast.GeneratorExp(elt=iterable.elt, generators=iterable.generators)
++            else:
++                target = iterable
++
++            # Replace all/any(...) with a manual loop, breaks on the first failure
++            temp_name = self.gen_prefix + "iter"
++            fail_name = self.gen_prefix + "fail"
++            new_nodes = [
++                ast.Assign(targets=[ast.Name(id=fail_name, ctx=ast.Store())], value=ast.Constant(value=False)),
++                ast.For(
++                    target=target.generators[0].target,
++                    iter=target.generators[0].iter,
++                    body=[
++                        ast.If(
++                            test=ast.UnaryOp(op=ast.Not(), operand=target.elt) if call.func.id == "all" else target.elt,
++                            body=[ast.Assign(targets=[ast.Name(id=fail_name, ctx=ast.Store())], value=ast.Constant(value=True)), ast.Break()],
++                            orelse=[],
++                        )
++                    ],
++                    orelse=[],
++                ),
+             isinstance(call.func, ast.Name)
+             and call.args
+             and len(call.args) == 1
+@@ -730,7 +760,7 @@
+             and call.func.id in ("all", "any")
+         ):
+             iterable = call.args[0]
+-            if isinstance(iterable, (ast.ListComp, ast.SetComp, ast.DictComp)):
++            if isinstance(iterable, (ast.GeneratorExp, ast.ListComp, ast.SetComp, ast.DictComp)):
+                 # Convert list/set/dict comprehension to generator expression
+                 target = ast.GeneratorExp(elt=iterable.elt, generators=iterable.generators)
+             else:
+@@ -738,18 +768,20 @@
+                     elt=ast.Name(id="__element__", ctx=ast.Load()),
+                     generators=[ast.comprehension(target=ast.Name(id="__element__", ctx=ast.Store()), iter=iterable, ifs=[], is_async=0)],
+                 )
++
+             # Replace all/any(...) with a manual loop, breaks on the first failure
+             temp_name = self.gen_prefix + "iter"
+             fail_name = self.gen_prefix + "fail"
+             new_nodes = [
+                 ast.Assign(targets=[ast.Name(id=fail_name, ctx=ast.Store())], value=ast.Constant(value=False)),
+-                ast.For(
+-                    target=target.generators[0].target,
+-                    iter=target.generators[0].iter,
+-                    body=[
+-                        ast.If(
+-                            test=ast.UnaryOp(op=ast.Not(), operand=target.elt) if call.func.id == "all" else target.elt,
+-                            body=[ast.Assign(targets=[ast.Name(id=fail_name, ctx=ast.Store())], value=ast.Constant(value=True)), ast.Break()],
++                ast.For(target=ast.Name(id=temp_name, ctx=ast.Store()), iter=target, body=[
++                    ast.Assert(
++                        test=target.elt if call.func.id == "any" else ast.UnaryOp(op=ast.Not(), operand=target.elt),
++                        msg=None
++                    )
++                ], orelse=[
++                        ast.Assign(targets=[ast.Name(id=fail_name, ctx=ast.Store())], value=ast.Constant(value=True)),
++                        ast.Break()
+                             orelse=[],
+                         )
+                     ],
+
+```
+
+Golden Patch: diff --git a/src/_pytest/assertion/rewrite.py b/src/_pytest/assertion/rewrite.py
+--- a/src/_pytest/assertion/rewrite.py
++++ b/src/_pytest/assertion/rewrite.py
+@@ -964,6 +964,8 @@ def visit_Call_35(self, call):
+         """
+         visit `ast.Call` nodes on Python3.5 and after
+         """
++        if isinstance(call.func, ast.Name) and call.func.id == "all":
++            return self._visit_all(call)
+         new_func, func_expl = self.visit(call.func)
+         arg_expls = []
+         new_args = []
+@@ -987,6 +989,27 @@ def visit_Call_35(self, call):
+         outer_expl = "%s\n{%s = %s\n}" % (res_expl, res_expl, expl)
+         return res, outer_expl
+ 
++    def _visit_all(self, call):
++        """Special rewrite for the builtin all function, see #5062"""
++        if not isinstance(call.args[0], (ast.GeneratorExp, ast.ListComp)):
++            return
++        gen_exp = call.args[0]
++        assertion_module = ast.Module(
++            body=[ast.Assert(test=gen_exp.elt, lineno=1, msg="", col_offset=1)]
++        )
++        AssertionRewriter(module_path=None, config=None).run(assertion_module)
++        for_loop = ast.For(
++            iter=gen_exp.generators[0].iter,
++            target=gen_exp.generators[0].target,
++            body=assertion_module.body,
++            orelse=[],
++        )
++        self.statements.append(for_loop)
++        return (
++            ast.Num(n=1),
++            "",
++        )  # Return an empty expression, all the asserts are in the for_loop
++
+     def visit_Starred(self, starred):
+         # From Python 3.5, a Starred node can appear in a function call
+         res, expl = self.visit(starred.value)
+@@ -997,6 +1020,8 @@ def visit_Call_legacy(self, call):
+         """
+         visit `ast.Call nodes on 3.4 and below`
+         """
++        if isinstance(call.func, ast.Name) and call.func.id == "all":
++            return self._visit_all(call)
+         new_func, func_expl = self.visit(call.func)
+         arg_expls = []
+         new_args = []
+

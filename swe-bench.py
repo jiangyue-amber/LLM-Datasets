@@ -73,7 +73,7 @@ for instance in sampled:
     response = ask_gemini(prompt)
 
     safe_name = id.replace(" ", "_").replace("/", "_")
-    filename = f"results_{safe_name}_software.txt"
+    filename = f"results_{safe_name}_{id}.txt"
     filepath = f"{output_dir}/{filename}"
 
     header = (

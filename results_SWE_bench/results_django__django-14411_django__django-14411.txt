@@ -1,0 +1,36 @@
+Repo: django/django
+Repo ID: django__django-14411
+Problem Statement: Label for ReadOnlyPasswordHashWidget points to non-labelable element.
+Description
+	 
+		(last modified by David Sanders)
+	 
+In the admin, the label element for the ReadOnlyPasswordHashWidget widget has a 'for' attribute which points to a non-labelable element, since the widget just renders text, not an input. There's no labelable element for the widget, so the label shouldn't have a 'for' attribute.
+
+
+GenAI's Patch:
+```patch
+--- a/django/contrib/admin/widgets.py
++++ b/django/contrib/admin/widgets.py
+@@ -32,5 +32,5 @@
+         if self.attrs is None:
+             self.attrs = {}
+         final_attrs = self.build_attrs(self.attrs, attrs)
+-        return mark_safe('<p id="%s">%s</p>' % (final_attrs['id'], conditional_escape(value)))
++        return mark_safe('<p>%s</p>' % conditional_escape(value))
+```
+
+Golden Patch: diff --git a/django/contrib/auth/forms.py b/django/contrib/auth/forms.py
+--- a/django/contrib/auth/forms.py
++++ b/django/contrib/auth/forms.py
+@@ -50,6 +50,9 @@ def get_context(self, name, value, attrs):
+         context['summary'] = summary
+         return context
+ 
++    def id_for_label(self, id_):
++        return None
++
+ 
+ class ReadOnlyPasswordHashField(forms.Field):
+     widget = ReadOnlyPasswordHashWidget
+

@@ -1,0 +1,75 @@
+Repo: scikit-learn/scikit-learn
+Repo ID: scikit-learn__scikit-learn-11040
+Problem Statement: Missing parameter validation in Neighbors estimator for float n_neighbors
+```python
+from sklearn.neighbors import NearestNeighbors
+from sklearn.datasets import make_blobs
+X, y = make_blobs()
+neighbors = NearestNeighbors(n_neighbors=3.)
+neighbors.fit(X)
+neighbors.kneighbors(X)
+```
+```
+~/checkout/scikit-learn/sklearn/neighbors/binary_tree.pxi in sklearn.neighbors.kd_tree.NeighborsHeap.__init__()
+
+TypeError: 'float' object cannot be interpreted as an integer
+```
+This should be caught earlier and a more helpful error message should be raised (or we could be lenient and cast to integer, but I think a better error might be better).
+
+We need to make sure that 
+```python
+neighbors.kneighbors(X, n_neighbors=3.)
+```
+also works.
+
+
+GenAI's Patch:
+```diff
+--- a/sklearn/neighbors/base.py
++++ b/sklearn/neighbors/base.py
+@@ -143,6 +143,8 @@
+         else:
+             n_neighbors = self.n_neighbors
+ 
++        if not isinstance(n_neighbors, (int, np.integer)):
++            raise TypeError("n_neighbors must be an integer.")
+         if n_neighbors <= 0:
+             raise ValueError("Expected n_neighbors > 0."
+                              "  Got %d" % n_neighbors)
+```
+
+Golden Patch: diff --git a/sklearn/neighbors/base.py b/sklearn/neighbors/base.py
+--- a/sklearn/neighbors/base.py
++++ b/sklearn/neighbors/base.py
+@@ -258,6 +258,12 @@ def _fit(self, X):
+                     "Expected n_neighbors > 0. Got %d" %
+                     self.n_neighbors
+                 )
++            else:
++                if not np.issubdtype(type(self.n_neighbors), np.integer):
++                    raise TypeError(
++                        "n_neighbors does not take %s value, "
++                        "enter integer value" %
++                        type(self.n_neighbors))
+ 
+         return self
+ 
+@@ -327,6 +333,17 @@ class from an array representing our data set and ask who's
+ 
+         if n_neighbors is None:
+             n_neighbors = self.n_neighbors
++        elif n_neighbors <= 0:
++            raise ValueError(
++                "Expected n_neighbors > 0. Got %d" %
++                n_neighbors
++            )
++        else:
++            if not np.issubdtype(type(n_neighbors), np.integer):
++                raise TypeError(
++                    "n_neighbors does not take %s value, "
++                    "enter integer value" %
++                    type(n_neighbors))
+ 
+         if X is not None:
+             query_is_train = False
+

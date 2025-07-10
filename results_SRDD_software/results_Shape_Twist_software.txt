@@ -1,0 +1,8 @@
+# Software Name: Shape_Twist
+# Category: Puzzle_Game
+# Description: Shape Twist is a puzzle game where players have to rotate and flip geometric shapes to fit them into a given silhouette. Players are presented with a silhouette and a set of shapes, including squares, triangles, and circles. They need to manipulate the shapes by rotating and flipping them to find the correct orientation and placement that matches the silhouette.
+
+# Interactive? No
+# Pop-up Window? Yes
+
+# Description: Shapes and target appear on the screen but cannot be moved.

@@ -1,0 +1,8 @@
+# Software Name: Data_Integrity_Analyzer
+# Category: Data
+# Description: The Data Integrity Analyzer is a software application that analyzes and evaluates the integrity of data sets, helping users identify and address data quality issues. It performs checks on data consistency, accuracy, completeness, and validity, providing users with a comprehensive assessment of the overall data integrity.
+
+# Interactive? No
+# Pop-up Window? No
+
+# Description: Reads in a hard coded dataset and identifies missing and invalid data in the dataset.

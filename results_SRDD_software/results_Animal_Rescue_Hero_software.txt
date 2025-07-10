@@ -1,0 +1,8 @@
+# Software Name: Animal_Rescue_Hero
+# Category: Simulation_Game
+# Description: Animal Rescue Hero is a simulation game software where players can rescue and care for abandoned and injured animals. Manage the operations of the rescue center, including fundraising, volunteer coordination, and community outreach. Make critical decisions to ensure the well-being and happiness of the animals under your care.
+
+# Interactive? Yes
+# Pop-up Window? No
+
+# Description: User can choose actions from a list of 11 choices and input animal related information.

@@ -1,0 +1,8 @@
+# Software Name: MiniLab_Assistant
+# Category: Science
+# Description: A software application that assists science students in conducting experiments in a virtual laboratory setting, offering simulated experiments, tutorials, and real-time feedback.
+
+# Interactive? Yes
+# Pop-up Window? No
+
+# Description: The user can choose between two types of experiments and decide whether to view a tutorial in text format. The software then simulates the experiment process and reports whether it succeeds or fails.

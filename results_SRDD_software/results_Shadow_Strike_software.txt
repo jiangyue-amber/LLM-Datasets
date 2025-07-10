@@ -1,0 +1,8 @@
+# Software Name: Shadow_Strike
+# Category: Action_Game
+# Description: Shadow Strike is an action game where players take on the role of a stealthy assassin infiltrating enemy bases. Players must complete missions by silently eliminating targets, avoiding detection, and overcoming security measures. The game features a variety of levels with increasing difficulty, challenging players to strategize their approach and make precise strikes. With realistic stealth mechanics, immersive gameplay, and stunning graphics, Shadow Strike offers a thrilling and intense action gaming experience.
+
+# Interactive? No
+# Pop-up Window? Yes
+
+# Description: Simulates a target shooting scenario, but the gun is stationary and targets are automatically hit. A score counter is displayed in the top-left corner.

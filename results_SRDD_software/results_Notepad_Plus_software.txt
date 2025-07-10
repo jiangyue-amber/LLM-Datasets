@@ -1,0 +1,8 @@
+# Software Name: Notepad_Plus
+# Category: Tools_Utilities
+# Description: Notepad Plus is a software application that provides an enhanced text editing experience. It includes features such as syntax highlighting, code indentation, search and replace functionality, and customizable themes. Notepad Plus allows users to create and edit text files with ease, making it a versatile tool for programmers, writers, and anyone who needs a powerful yet simple text editor.
+
+# Interactive? Yes
+# Pop-up Window? Yes
+
+# Description: A notepad window pops up, allowing users to write and save content as a file or open existing .txt files. Users can also edit the content and customize the font settings.

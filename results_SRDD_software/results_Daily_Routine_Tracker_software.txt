@@ -1,0 +1,8 @@
+# Software Name: Daily_Routine_Tracker
+# Category: Personalisation
+# Description: A personalization software application that helps users track and optimize their daily routines and habits. Users can input their routines and the software provides personalized recommendations for improvements to help users optimize their daily schedules. The software also offers features like progress tracking and reminders to help users stay consistent with their routines.
+
+# Interactive? No
+# Pop-up Window? No
+
+# Description: Simulates the process of user input, activity tracking, giving suggestion, and sending reminders in text format.

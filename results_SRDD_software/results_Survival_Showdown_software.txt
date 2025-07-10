@@ -1,0 +1,8 @@
+# Software Name: Survival_Showdown
+# Category: Shooter_Game
+# Description: The software, named Survival Showdown, is a shooter game that puts players in a fierce battle for survival against waves of enemies. Armed with a variety of weapons and power-ups, players must eliminate enemies and stay alive as long as possible in an ever-shrinking arena. The game offers intense action, strategic gameplay, and thrilling challenges as players strive to beat their own high scores.
+
+# Interactive? No
+# Pop-up Window? Yes
+
+# Description: Simulates a target shooting scenario, but the gun cannot be fired and targets cannot be hit. A score counter and remaining health are displayed in the top-left corner.

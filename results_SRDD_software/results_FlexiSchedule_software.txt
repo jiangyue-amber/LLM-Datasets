@@ -1,0 +1,8 @@
+# Software Name: FlexiSchedule
+# Category: Schedule
+# Description: FlexiSchedule is a schedule software application that allows users to create flexible schedules based on their availability and preferences. It provides a user-friendly interface where users can input their tasks, set priorities, and allocate time slots. FlexiSchedule also offers customization options, allowing users to define their work hours, breaks, and recurring activities. The software provides reminders and notifications to keep users on track with their schedule. Additionally, FlexiSchedule offers a visual representation of the schedule, allowing users to easily manage their tasks and optimize their productivity.
+
+# Interactive? Yes
+# Pop-up Window? Yes
+
+# Description: Users can input tasks, durations, and priorities, as well as adjust work start times and break times in the preference settings. The software then generates a schedule based on the user’s input.

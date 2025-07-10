@@ -1,0 +1,8 @@
+# Software Name: Calorie_Burner
+# Category: Health_Fitness
+# Description: Calorie Burner is a software application that allows users to track and monitor the number of calories burned during physical activities and workouts. Users can select from a list of common activities or input custom activities to calculate the calories burned. The app provides real-time tracking of calories burned and displays an overview of the user
+
+# Interactive? Yes
+# Pop-up Window? No
+
+# Description: User can track their activity and duration, and the software calculates the calories consumed.

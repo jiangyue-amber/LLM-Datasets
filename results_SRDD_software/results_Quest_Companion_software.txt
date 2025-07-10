@@ -1,0 +1,8 @@
+# Software Name: Quest_Companion
+# Category: Role_Playing_Game
+# Description: A software application that assists role-playing game players in completing quests by providing step-by-step guidance and tracking their progress. It offers quest-specific tips, strategies, and objectives, helping players navigate through challenging quests. The application allows users to mark completed objectives, track their overall progress, and view detailed quest information. A user-friendly interface with customizable categories and tags ensures easy organization and accessibility of quests.
+
+# Interactive? Yes
+# Pop-up Window? No
+
+# Description: A quest management companion where users can create, view, list, and manage quests with customizable objectives, tips, strategies, tags, and categories.

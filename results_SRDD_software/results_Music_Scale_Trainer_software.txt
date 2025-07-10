@@ -1,0 +1,8 @@
+# Software Name: Music_Scale_Trainer
+# Category: Music
+# Description: MST (Music Scale Trainer) is a software application designed to help musicians and music enthusiasts practice and improve their knowledge of musical scales. It provides interactive exercises where users can identify and play different scales on their instrument of choice. The software offers a variety of difficulty levels, real-time feedback on accuracy, and educational resources with explanations and audio examples of each scale. Users can track their progress and aim to master all major and minor scales.
+
+# Interactive? Yes
+# Pop-up Window? No
+
+# Description: Users identify what is the given scale—though answer choices are provided within the question. After answering five questions, a score is calculated based on the responses.

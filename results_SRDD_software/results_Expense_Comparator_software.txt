@@ -1,0 +1,8 @@
+# Software Name: Expense_Comparator
+# Category: Finance
+# Description: Expense Comparator is a finance software application that helps users compare their expenses across different time periods. Users can input their expenses and categorize them into different categories such as groceries, transportation, entertainment, etc. The application will provide a visual representation of their expenses through charts and graphs, allowing users to easily compare their spending habits between different timeframes. Users can also set custom date ranges for comparison. The main function of the software is to provide users with a clear understanding of their spending patterns and identify areas where they can make adjustments to improve their financial well-being.
+
+# Interactive? No
+# Pop-up Window? No (but create graphs)
+
+# Description: Simulates user input expenses by time and by category, creating three graphs including bar chart and line charts.

@@ -27,7 +27,7 @@ def build_prompt(name, description, category):
         Software Description: {description}
         """
 
-sampled_df = df.sample(n=3)
+sampled_df = df.sample(n=10)
 
 output_dir = "results_SRDD_software"
 os.makedirs(output_dir, exist_ok=True)
@@ -40,6 +40,10 @@ for _, row in sampled_df.iterrows():
     prompt = build_prompt(name, description, category)
     response = model.generate_content(prompt)
     gemini_response = response.text.strip()
+    if gemini_response.startswith("```python") and gemini_response.endswith("```"):
+        parsed_response = gemini_response[9:-3].strip()
+    else:
+        parsed_response = gemini_response
 
     safe_name = name.replace(" ", "_").replace("/", "_")
     filename = f"results_{safe_name}_software.py"
@@ -52,4 +56,4 @@ for _, row in sampled_df.iterrows():
     )
 
     with open(filepath, "w", encoding="utf-8") as f:
-        f.write(header + gemini_response)
+        f.write(header + parsed_response)

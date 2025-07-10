@@ -1,0 +1,8 @@
+# Software Name: QuickDelivery
+# Category: Restaurants_Delivery
+# Description: QuickDelivery is a Restaurants&Delivery software application that focuses on providing fast and efficient delivery services for users. It allows users to easily browse through a curated selection of popular dishes from local restaurants and place orders for delivery. Users can track the progress of their orders in real-time and benefit from seamless payment options.
+
+# Interactive? No
+# Pop-up Window? No
+
+# Description: Simulates a food delivery system. It manages restaurant menus, processes user orders, updates order statuses, and stores all data in a structured JSON format.

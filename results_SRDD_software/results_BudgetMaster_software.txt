@@ -1,0 +1,8 @@
+# Software Name: BudgetMaster
+# Category: Budgeting
+# Description: BudgetMaster is a budgeting software application that helps individuals effectively manage their finances by providing comprehensive budgeting features. It allows users to input their income and expenses, categorize them, and set budget goals. The software provides visual representations of budget breakdowns and generates reports to track spending patterns. With BudgetMaster, users can make informed financial decisions and stay on track to achieve their financial goals.
+
+# Interactive? No
+# Pop-up Window? No
+
+# Description: Simulates tracking income and categorized expenses, allows users to set budget goals, and generates a detailed budget report summarizing income, expenses by category, and remaining budget. The visualization feature is not available yet.

@@ -1,0 +1,8 @@
+# Software Name: Animation_Creator
+# Category: Graphics
+# Description: Animation Creator is a graphics software application that allows users to create and edit animations. It provides a variety of tools and features for designing and animating characters, objects, and scenes. Users can easily create keyframes, adjust timing, and apply smooth transitions between frames. The software supports various animation techniques such as traditional frame-by-frame animation, skeletal animation, and motion capture. Users can also add special effects and sound to enhance their animations. Animation Creator offers a user-friendly interface with intuitive controls for easy animation creation and editing.
+
+# Interactive? Yes
+# Pop-up Window? Yes
+
+# Description: Each user click generates a square with a randomly assigned color at the current mouse position.

@@ -1,0 +1,8 @@
+# Software Name: Language_Verb_Conjugator
+# Category: Language
+# Description: Language Verb Conjugator is a software application that helps language learners practice and improve their verb conjugation skills. It provides a comprehensive database of verbs in various languages along with their conjugation patterns. Users can search for a specific verb and the software will display its conjugations in different tenses, moods, and persons. The conjugations are presented in a clear and organized format, making it easy for users to study and practice verb conjugation.
+
+# Interactive? No
+# Pop-up Window? No
+
+# Description: Simulate the process of one conjugation search, returning the results in dictionary format.

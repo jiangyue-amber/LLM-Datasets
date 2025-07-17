@@ -5,107 +5,139 @@
 import pandas as pd
 
 class DataIntegrityAnalyzer:
-    """
-    Analyzes and evaluates the integrity of data sets, identifying data quality issues.
-    """
-
     def __init__(self, data):
         """
-        Initializes the DataIntegrityAnalyzer with the input data.
+        Initializes the DataIntegrityAnalyzer with a pandas DataFrame.
 
         Args:
-            data: A pandas DataFrame containing the data to analyze.
+            data (pd.DataFrame): The data to be analyzed.
         """
         self.data = data
 
-    def check_consistency(self, column1, column2, condition):
+    def check_missing_values(self):
         """
-        Checks for data consistency between two columns based on a given condition.
-
-        Args:
-            column1 (str): The name of the first column.
-            column2 (str): The name of the second column.
-            condition (function): A function that takes two values (from column1 and column2)
-                                  and returns True if the condition is met, False otherwise.
+        Checks for missing values in the DataFrame.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the rows where the consistency check failed.
+            pd.DataFrame: A DataFrame showing the number and percentage of missing values for each column.
         """
-        inconsistent_data = self.data[~self.data.apply(lambda row: condition(row[column1], row[column2]), axis=1)]
-        return inconsistent_data
+        missing_counts = self.data.isnull().sum()
+        missing_percentages = (missing_counts / len(self.data)) * 100
+        missing_data = pd.DataFrame({'Missing Count': missing_counts, 'Missing Percentage': missing_percentages})
+        return missing_data.sort_values(by='Missing Count', ascending=False)
 
-    def check_accuracy(self, column, expected_values, accuracy_threshold=0.95):
+    def check_duplicate_rows(self):
         """
-        Checks the accuracy of a column by comparing its values to expected values.
+        Checks for duplicate rows in the DataFrame.
+
+        Returns:
+            int: The number of duplicate rows.
+        """
+        return self.data.duplicated().sum()
+
+    def check_data_types(self):
+        """
+        Checks the data types of each column in the DataFrame.
+
+        Returns:
+            pd.Series: A Series showing the data type of each column.
+        """
+        return self.data.dtypes
+
+    def check_value_ranges(self, column, min_value=None, max_value=None):
+        """
+        Checks if values in a specified column fall within a given range.
 
         Args:
             column (str): The name of the column to check.
-            expected_values (list): A list of expected values for the column.
-            accuracy_threshold (float): Minimum acceptable percentage of matching values.
+            min_value (float or int, optional): The minimum allowed value. Defaults to None.
+            max_value (float or int, optional): The maximum allowed value. Defaults to None.
 
         Returns:
-             float: Percentage of matching values in the given column against expected values.
+            pd.Series: A boolean Series indicating whether each value is within the specified range.
         """
-        valid_count = self.data[self.data[column].isin(expected_values)].shape[0]
-        accuracy = valid_count / len(self.data)
-        return accuracy
+        if column not in self.data.columns:
+            raise ValueError(f"Column '{column}' not found in DataFrame.")
 
-    def check_completeness(self, column):
+        if min_value is not None and max_value is not None:
+            return (self.data[column] >= min_value) & (self.data[column] <= max_value)
+        elif min_value is not None:
+            return self.data[column] >= min_value
+        elif max_value is not None:
+            return self.data[column] <= max_value
+        else:
+            raise ValueError("Either min_value or max_value must be provided.")
+
+    def check_categorical_values(self, column, allowed_values):
         """
-        Checks for missing values (NaN) in a specified column.
+        Checks if categorical values in a specified column are within a set of allowed values.
 
         Args:
-            column (str): The name of the column to check for completeness.
+            column (str): The name of the column to check.
+            allowed_values (list): A list of allowed values for the column.
 
         Returns:
-            float: The percentage of missing values in the column.
+            pd.Series: A boolean Series indicating whether each value is in the allowed values.
         """
-        missing_percentage = self.data[column].isnull().sum() / len(self.data)
-        return missing_percentage
+        if column not in self.data.columns:
+            raise ValueError(f"Column '{column}' not found in DataFrame.")
+        return self.data[column].isin(allowed_values)
 
-    def check_validity(self, column, validation_function):
+    def run_all_checks(self, column_ranges=None, column_categories=None):
         """
-        Checks the validity of data in a column using a custom validation function.
+        Runs all defined checks and returns a dictionary of results.
 
         Args:
-            column (str): The name of the column to validate.
-            validation_function (function): A function that takes a value from the column and
-                                           returns True if the value is valid, False otherwise.
+            column_ranges (dict, optional): A dictionary specifying column ranges (column_name: (min_value, max_value)). Defaults to None.
+            column_categories (dict, optional): A dictionary specifying column allowed categories (column_name: [allowed_values]). Defaults to None.
 
         Returns:
-            pandas.DataFrame: A DataFrame containing the rows where the validation check failed.
+            dict: A dictionary containing the results of all checks.
         """
-        invalid_data = self.data[~self.data[column].apply(validation_function)]
-        return invalid_data
+        results = {}
+        results['missing_values'] = self.check_missing_values()
+        results['duplicate_rows'] = self.check_duplicate_rows()
+        results['data_types'] = self.check_data_types()
 
-    def analyze_data_integrity(self):
-          """
-          Executes all defined integrity checks and returns the results.  Placeholder to demonstrate function call. Users should define specific checks based on their data.
+        if column_ranges:
+            results['value_range_checks'] = {}
+            for column, (min_value, max_value) in column_ranges.items():
+                try:
+                    results['value_range_checks'][column] = self.check_value_ranges(column, min_value, max_value)
+                except ValueError as e:
+                    results['value_range_checks'][column] = str(e)
+        if column_categories:
+            results['categorical_checks'] = {}
+            for column, allowed_values in column_categories.items():
+                try:
+                    results['categorical_checks'][column] = self.check_categorical_values(column, allowed_values)
+                except ValueError as e:
+                    results['categorical_checks'][column] = str(e)
 
-          Returns:
-            dict: A dictionary containing the results of the data integrity checks.
-          """
-          results = {}
-          # Example usage (replace with your specific checks)
-          # results['consistency_check'] = self.check_consistency('columnA', 'columnB', lambda a, b: a <= b)
-          # results['accuracy_check'] = self.check_accuracy('columnC', ['value1', 'value2'])
-          # results['completeness_check'] = self.check_completeness('columnD')
-          # results['validity_check'] = self.check_validity('columnE', lambda x: isinstance(x, int) and x > 0)
-          return results
+        return results
+
 if __name__ == '__main__':
-    # Example usage
-    data = {'ID': [1, 2, 3, 4, 5],
-            'Name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],
-            'Age': [25, 30, None, 22, 35],
-            'City': ['New York', 'London', 'Paris', 'Tokyo', 'Sydney']}
+    # Example Usage
+    data = {'col1': [1, 2, 3, 4, 5, None],
+            'col2': ['A', 'B', 'A', 'C', 'B', 'A'],
+            'col3': [10.0, 20.0, 30.0, 40.0, 50.0, 60.0]}
     df = pd.DataFrame(data)
 
     analyzer = DataIntegrityAnalyzer(df)
 
-    # Completeness check on 'Age' column
-    missing_age_percentage = analyzer.check_completeness('Age')
-    print(f"Missing percentage in Age column: {missing_age_percentage}")
+    # Run specific checks
+    missing_data = analyzer.check_missing_values()
+    duplicate_count = analyzer.check_duplicate_rows()
+    data_types = analyzer.check_data_types()
+    col1_range_check = analyzer.check_value_ranges('col1', min_value=1, max_value=5)
+    col2_category_check = analyzer.check_categorical_values('col2', ['A', 'B', 'C'])
 
-    # Validity check on 'Age' column (age should be a positive integer)
-    invalid_age_data = analyzer.check_validity('Age', lambda x: isinstance(x, (int, float)) and (x > 0) if x is not None else True)
-    print(f"Invalid Age data:\n{invalid_age_data}")
+    print("Missing Data:\n", missing_data)
+    print("\nDuplicate Row Count:", duplicate_count)
+    print("\nData Types:\n", data_types)
+    print("\nCol1 Range Check (1-5):\n", col1_range_check)
+    print("\nCol2 Category Check (A, B, C):\n", col2_category_check)
+
+    #Run all checks
+    all_results = analyzer.run_all_checks(column_ranges={'col3': (15.0, 55.0)}, column_categories={'col2': ['A', 'B']})
+    print("\nAll Results:\n", all_results)

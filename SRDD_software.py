@@ -27,7 +27,7 @@ def build_prompt(name, description, category):
         Software Description: {description}
         """
 
-sampled_df = df.sample(n=10)
+sampled_df = df.sample(n=50)
 
 output_dir = "results_SRDD_software"
 os.makedirs(output_dir, exist_ok=True)
